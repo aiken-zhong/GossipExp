@@ -2,8 +2,8 @@ import java.util.Random;
 
 public class Main {
 	private static int MAX = 100;
-	private static int SCALE = 500;
-	private static double K = 1.5;
+	private static int SCALE = 1000;
+	private static double K = 1.01;
 
 	public static void main(String[] args) {
 		double[] node = new double[SCALE];
@@ -11,15 +11,18 @@ public class Main {
 		Random random = new Random();
 		for (int i = 0; i < node.length; i++) {
 			node[i] = random.nextDouble()*MAX;
-			interest[i] = 1;
+			interest[i] = 0.99;
 		}
 		
-		int exchange = 1;
-		do {
-			exchange = 0;
+		double avg = avg(node);
+		
+		int n = 0;
+		while (true) {
+			n++;
+			int exchange = 0;
 			for (int i = 0; i < node.length; i++) {
 				if (random.nextDouble() < interest[i]) {
-					int j = random.nextInt(MAX+1);
+					int j = random.nextInt(SCALE);
 					if (node[i] == node[j]){
 						interest[i] = interest[i]/K;
 					}
@@ -39,8 +42,20 @@ public class Main {
 				System.out.print(interest[i] + ",  ");
 			}
 			System.out.println(exchange);
-		} while (exchange == 0);
+			if (exchange == 0) {
+				break;
+			}
+		}
+		System.out.println(n);
+		System.out.println(avg);
 
+	}
+	private static double avg(double[] arr) {
+		double sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			sum += arr[i];
+		}
+		return sum/arr.length;
 	}
 
 }
